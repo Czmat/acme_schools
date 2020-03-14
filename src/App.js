@@ -120,7 +120,6 @@ const App = () => {
   return (
     <div>
       <Header students={students} schools={schools} params={params} />
-      {!!error && <div className="error">{error}</div>}
       {!params.view && (
         <div className="forms">
           <SchoolForm

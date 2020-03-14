@@ -28,7 +28,9 @@ export default function SchoolForm({
         className="deleteBtn"
         onClick={() => {
           destroySchool(reviseSchool.id);
-          window.location = '#';
+          if (!error) {
+            window.location = '#';
+          }
         }}
       >
         Delete
