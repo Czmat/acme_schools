@@ -1,10 +1,10 @@
 import React from 'react';
 
-export default function Header({ schools, students, params }) {
+export default function Header({ schools, students, setError }) {
   return (
     <div>
       <h1>
-        <a href={`#`} className={params.view === 'home' ? 'selected' : ''}>
+        <a href={`#`} onClick={() => setError('')}>
           Acme Schools
         </a>
       </h1>
