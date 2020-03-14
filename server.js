@@ -54,11 +54,25 @@ app.put('/api/students/:id', (req, res, next) => {
     .catch(next);
 });
 
+app.put('/api/schools/:id', (req, res, next) => {
+  console.log(req.body, req.params.id);
+  db.updateSchool(req.body)
+    .then(school => res.send(school))
+    .catch(next);
+});
+
 //delete
 app.delete('/api/students/:id', (req, res, next) => {
   const id = req.params.id;
-  db.deleteUser(id)
-    .then(response => res.send(response))
+  db.deleteStudent(id)
+    .then(() => res.sendStatus(204))
+    .catch(next);
+});
+
+app.delete('/api/schools/:id', (req, res, next) => {
+  const id = req.params.id;
+  db.deleteSchool(id)
+    .then(() => res.sendStatus(204))
     .catch(next);
 });
 

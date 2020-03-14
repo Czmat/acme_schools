@@ -8,22 +8,20 @@ import StudentForm from './components/StudentForm';
 import UnenrolledStudentList from './components/UnenrolledStudentList';
 import SchoolCard from './components/SchoolCard';
 import UpdateStudentForm from './components/UpdateStudentForm';
+import UpdateSchoolForm from './components/UpdateSchoolForm';
 
 const App = () => {
-  // const [student, setStudent] = useState({
-  //   name: '',
-  //   students_schoolid_fkey: '',
-  // });
-  // console.log(student);
   const [students, setStudents] = useState([]);
   const [reviseStudent, setReviseStudent] = useState({
     name: '',
     students_schoolid_fkey: '',
   });
-  console.log(reviseStudent, 'app');
+  const [reviseSchool, setReviseSchool] = useState({
+    name: '',
+  });
   const [schools, setSchools] = useState([]);
   const [error, setError] = useState([]);
-  const [params, setParams] = useState([]);
+  const [params, setParams] = useState(qs.parse(getHash()));
 
   useEffect(() => {
     window.addEventListener('hashchange', () => {
@@ -33,7 +31,6 @@ const App = () => {
   }, []);
 
   const createSchool = async schoolName => {
-    console.log(schoolName);
     try {
       const created = (await axios.post('/api/schools', schoolName)).data;
       setSchools([...schools, created]);
@@ -44,7 +41,6 @@ const App = () => {
   };
 
   const createStudent = async studentName => {
-    console.log(studentName);
     try {
       const created = (await axios.post('/api/students', studentName)).data;
       setStudents([...students, created]);
@@ -67,8 +63,52 @@ const App = () => {
         }
       });
       setStudents(updatedStudents);
+      setError('');
     } catch (ex) {
       setError(ex.response.data.message);
+    }
+  };
+
+  const updateSchool = async school => {
+    try {
+      const updated = (await axios.put(`/api/schools/${school.id}`, school))
+        .data;
+      const updatedSchools = schools.map(school => {
+        if (school.id !== updated.id) {
+          return school;
+        } else {
+          return updated;
+        }
+      });
+      setSchools(updatedSchools);
+      setError('');
+    } catch (ex) {
+      setError(ex.response.data.message);
+    }
+  };
+
+  //deletefunc
+  const destroyStudent = async studentToDestroyId => {
+    try {
+      await axios.delete(`/api/students/${studentToDestroyId}`);
+      const updated = students.filter(
+        student => student.id !== studentToDestroyId
+      );
+      setStudents(updated);
+      setError('');
+    } catch (ex) {
+      setError(ex.response.data.message);
+    }
+  };
+
+  const destroySchool = async schoolToDestroyId => {
+    try {
+      await axios.delete(`/api/schools/${schoolToDestroyId}`);
+      const updated = schools.filter(school => school.id !== schoolToDestroyId);
+      setSchools(updated);
+      setError('');
+    } catch (ex) {
+      setError(ex.response.data.error);
     }
   };
 
@@ -81,50 +121,63 @@ const App = () => {
     <div>
       <Header students={students} schools={schools} params={params} />
       {!!error && <div className="error">{error}</div>}
-      <div className="forms">
-        <SchoolForm setSchools={setSchools} createSchool={createSchool} />
-        <StudentForm
+      {!params.view && (
+        <div className="forms">
+          <SchoolForm
+            setSchools={setSchools}
+            error={error}
+            createSchool={createSchool}
+          />
+          <StudentForm
+            error={error}
+            schools={schools}
+            createStudent={createStudent}
+          />
+        </div>
+      )}
+      <div className="card ">
+        {!params.view && (
+          <UnenrolledStudentList
+            students={students}
+            params={params}
+            reviseStudent={reviseStudent}
+            setReviseStudent={setReviseStudent}
+          />
+        )}
+        {!params.view && (
+          <SchoolCard
+            students={students}
+            schools={schools}
+            params={params}
+            updateStudent={updateStudent}
+            reviseStudent={reviseStudent}
+            setReviseStudent={setReviseStudent}
+            setReviseSchool={setReviseSchool}
+          />
+        )}
+      </div>
+      {params.view === 'school' && (
+        <UpdateSchoolForm
+          error={error}
+          updateSchool={updateSchool}
           schools={schools}
           createStudent={createStudent}
-          // student={student}
-          // setStudent={setStudent}
+          reviseSchool={reviseSchool}
+          setReviseSchool={setReviseSchool}
+          destroySchool={destroySchool}
         />
+      )}
+      {params.view === 'student' && (
         <UpdateStudentForm
+          error={error}
           updateStudent={updateStudent}
           schools={schools}
           createStudent={createStudent}
           reviseStudent={reviseStudent}
           setReviseStudent={setReviseStudent}
+          destroyStudent={destroyStudent}
         />
-      </div>
-      <div className="student-card school-card">
-        <UnenrolledStudentList
-          students={students}
-          params={params}
-          reviseStudent={reviseStudent}
-          setReviseStudent={setReviseStudent}
-        />
-        <SchoolCard
-          students={students}
-          schools={schools}
-          params={params}
-          updateStudent={updateStudent}
-          reviseStudent={reviseStudent}
-          setReviseStudent={setReviseStudent}
-        />
-      </div>
-      {/* <div>Students</div>
-      <ul>
-        {students.map(student => {
-          return <li key={student.id}>{student.name}</li>;
-        })}
-      </ul> */}
-      {/* <div>Schools</div>
-      <ul>
-        {schools.map(school => {
-          return <li key={school.id}>{school.name}</li>;
-        })}
-      </ul> */}
+      )}
     </div>
   );
 };

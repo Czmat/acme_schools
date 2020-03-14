@@ -1,14 +1,10 @@
 import React from 'react';
-import qs from 'qs';
 
 export default function Header({ schools, students, params }) {
   return (
     <div>
       <h1>
-        <a
-          href={`#${qs.stringify({ view: 'home' })}`}
-          className={params.view === 'home' ? 'selected' : ''}
-        >
+        <a href={`#`} className={params.view === 'home' ? 'selected' : ''}>
           Acme Schools
         </a>
       </h1>

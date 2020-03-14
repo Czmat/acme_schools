@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import qs from 'qs';
 
 export default function SchoolCard({
@@ -6,14 +6,12 @@ export default function SchoolCard({
   schools,
   params,
   updateStudent,
-  reviseStudent,
   setReviseStudent,
+  setReviseSchool,
 }) {
   const handleSelectOnChange = (e, schoolId) => {
-    //console.log(e.target.value, schoolId);
     const updated = students.find(s => s.id === e.target.value);
     updated.students_schoolid_fkey = schoolId;
-    //console.log(updated);
     updateStudent(updated);
   };
 
@@ -21,10 +19,9 @@ export default function SchoolCard({
     const updated = { ...student, students_schoolid_fkey: '' };
     updateStudent(updated);
   };
-  //console.log(schools, students);
 
   return (
-    <div>
+    <div className="school-card">
       {schools.map(school => {
         return (
           <div key={school.id}>
@@ -32,6 +29,7 @@ export default function SchoolCard({
               <a
                 href={`#${qs.stringify({ view: 'school' })}`}
                 className={params.view === 'school' ? 'selected' : ''}
+                onClick={() => setReviseSchool(school)}
               >
                 {school.name}
               </a>
@@ -59,10 +57,7 @@ export default function SchoolCard({
                       <a
                         href={`#${qs.stringify({ view: 'student' })}`}
                         className={params.view === 'student' ? 'selected' : ''}
-                        onClick={() => {
-                          console.log(reviseStudent, 'card');
-                          setReviseStudent(student);
-                        }}
+                        onClick={() => setReviseStudent(student)}
                       >
                         {student.name}
                       </a>

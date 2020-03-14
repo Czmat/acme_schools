@@ -27,9 +27,6 @@ h2 {
   text-transform: uppercase;
 }
 
-li {
-}
-
 li > * {
   margin: 1rem;
 }
@@ -55,6 +52,24 @@ form {
 form > * {
   margin: 1rem;
 }
+.school-card {
+  display: flex;
+  flex-wrap: wrap;
+}
 
-section {
+.card {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.unenrolled-students {
+  border: solid 1px black;
+  margin: 10px;
+  padding: 10px;
+}
+
+.school-card > div {
+  border: solid 1px black;
+  margin: 10px;
+  padding: 10px;
 }

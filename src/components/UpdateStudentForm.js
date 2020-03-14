@@ -3,30 +3,30 @@ import React from 'react';
 export default function UpdateStudentForm({
   reviseStudent,
   setReviseStudent,
-  params,
+  error,
   schools,
   updateStudent,
+  destroyStudent,
 }) {
   const onChange = e => {
     const changed = {};
     changed[e.target.name] = e.target.value;
-    console.log(changed);
     setReviseStudent({ ...reviseStudent, ...changed });
   };
 
   const handleOnSubmit = e => {
     e.preventDefault();
-    console.log('up student');
     updateStudent(reviseStudent);
   };
 
   const deleteStudent = id => {
-    console.log(id);
+    destroyStudent(id);
   };
 
   return (
     <div>
       <h3>Update Student</h3>
+      <div>{!!error && <div className="error">{error}</div>}</div>
       <form onSubmit={handleOnSubmit}>
         <input value={reviseStudent.name} name="name" onChange={onChange} />
         <select
@@ -45,11 +45,14 @@ export default function UpdateStudentForm({
             );
           })}
         </select>
-        <button>Update</button>
+        <button onClick={() => (window.location = '#')}>Update</button>
       </form>
       <button
         className="deleteBtn"
-        onClick={() => deleteStudent(reviseStudent.id)}
+        onClick={() => {
+          deleteStudent(reviseStudent.id);
+          window.location = '#';
+        }}
       >
         Delete
       </button>

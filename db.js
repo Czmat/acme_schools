@@ -55,6 +55,7 @@ const createSchool = async school => {
   ).rows[0];
 };
 
+//update
 const updateStudent = async student => {
   const SQL =
     'UPDATE students set name=$1, students_schoolid_fkey=$2 WHERE id=$3 returning *';
@@ -66,8 +67,20 @@ const updateStudent = async student => {
   return response.rows[0];
 };
 
+const updateSchool = async school => {
+  const SQL = 'UPDATE schools set name=$1 WHERE id=$2 returning *';
+  const response = await client.query(SQL, [school.name, school.id]);
+  return response.rows[0];
+};
+
+//delete
 const deleteStudent = async id => {
   const SQL = 'DELETE FROM students WHERE id=$1';
+  await client.query(SQL, [id]);
+};
+
+const deleteSchool = async id => {
+  const SQL = 'DELETE FROM schools WHERE id=$1';
   await client.query(SQL, [id]);
 };
 
@@ -79,4 +92,6 @@ module.exports = {
   createSchool,
   updateStudent,
   deleteStudent,
+  updateSchool,
+  deleteSchool,
 };

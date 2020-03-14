@@ -5,10 +5,9 @@ export default function UnenrolledStudentList({
   students,
   params,
   setReviseStudent,
-  reviseStudent,
 }) {
   return (
-    <div>
+    <div className="unenrolled-students">
       <h3>Unenrolled Students</h3>
       <ul>
         {students
@@ -19,10 +18,7 @@ export default function UnenrolledStudentList({
                 <a
                   href={`#${qs.stringify({ view: 'student' })}`}
                   className={params.view === 'student' ? 'selected' : ''}
-                  onClick={() => {
-                    console.log(reviseStudent, 'before');
-                    setReviseStudent(student);
-                  }}
+                  onClick={() => setReviseStudent(student)}
                 >
                   {student.name}
                 </a>

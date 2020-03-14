@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export default function SchoolForm({ schools, createStudent }) {
+export default function SchoolForm({ schools, createStudent, error }) {
   const [student, setStudent] = useState({
     name: '',
     students_schoolid_fkey: '',
@@ -8,13 +8,11 @@ export default function SchoolForm({ schools, createStudent }) {
   const onChange = e => {
     const changed = {};
     changed[e.target.name] = e.target.value;
-    console.log(changed);
     setStudent({ ...student, ...changed });
   };
 
   const onSubmit = e => {
     e.preventDefault();
-    console.log(student, 'onsubmit');
     createStudent(student);
     setStudent({
       name: '',
@@ -24,6 +22,7 @@ export default function SchoolForm({ schools, createStudent }) {
   return (
     <section>
       <h3>Create Student</h3>
+      <div>{!!error && <div className="error">{error}</div>}</div>
       <form onSubmit={onSubmit}>
         <input name="name" value={student.name} onChange={onChange} />
         {student.name}
